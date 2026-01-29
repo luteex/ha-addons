@@ -1,0 +1,14 @@
+name: "S7-300 connection test"
+version: "0.1.0"
+slug: "s7_300_test"
+description: "Test connection to Siemens S7-300 PLC"
+startup: application
+boot: auto
+arch:
+  - amd64
+  - armv7
+  - armhf
+  - aarch64
+host_network: true
+options: {}
+schema: {}
