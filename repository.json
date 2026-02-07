@@ -1,1 +1,6 @@
 
+{
+  "name": "Home Assistant Add-ons",
+  "url": "https://github.com/luteex/ha-addons",
+  "maintainer": "Luboš <your-email@example.com>"
+}
