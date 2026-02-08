@@ -1,5 +1,7 @@
 import socket
 import logging
+import signal
+import sys
 
 logging.basicConfig(
     level=logging.INFO,
@@ -9,24 +11,56 @@ logging.basicConfig(
 HOST = "0.0.0.0"
 PORT = 2000
 
-def main():
-    logging.info(f"Starting TCP server on {HOST}:{PORT}")
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((HOST, PORT))
-        s.listen(5)
-        logging.info("Server listening...")
+running = True
+server_socket = None
 
-        while True:
-            conn, addr = s.accept()
-            logging.info(f"Connection from {addr}")
-            with conn:
-                while True:
+def shutdown_handler(signum, frame):
+    global running
+    logging.info("Graceful shutdown requested")
+    running = False
+    if server_socket:
+        try:
+            server_socket.close()
+        except Exception:
+            pass
+
+def main():
+    global server_socket
+
+    logging.info(f"Starting TCP server on {HOST}:{PORT}")
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server_socket.bind((HOST, PORT))
+    server_socket.listen(5)
+    server_socket.settimeout(1.0)   # 👈 klíčový řádek
+
+    logging.info("Server listening...")
+
+    while running:
+        try:
+            conn, addr = server_socket.accept()
+        except socket.timeout:
+            continue
+        except OSError:
+            break
+
+        logging.info(f"Connection from {addr}")
+        with conn:
+            conn.settimeout(1.0)
+            while running:
+                try:
                     data = conn.recv(4096)
-                    if not data:
-                        logging.info(f"Connection closed by {addr}")
-                        break
-                    logging.info(f"Received from {addr}: {data!r}")
+                except socket.timeout:
+                    continue
+                if not data:
+                    logging.info(f"Connection closed by {addr}")
+                    break
+                logging.info(f"Received from {addr}: {data!r}")
+
+    logging.info("TCP server stopped cleanly")
+    sys.exit(0)
 
 if __name__ == "__main__":
+    signal.signal(signal.SIGTERM, shutdown_handler)
+    signal.signal(signal.SIGINT, shutdown_handler)
     main()
