@@ -1,10 +1,9 @@
-ARG BUILD_FROM=ghcr.io/home-assistant/amd64-base:latest
+ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
-RUN apk add --no-cache python3 py3-pip
+RUN apk add --no-cache python3
 
 WORKDIR /usr/src/app
-
 COPY tcp_server.py .
 
-CMD ["python3", "tcp_server.py"]
+COPY rootfs /
