@@ -8,6 +8,9 @@ arch:
   - aarch64
 startup: services
 boot: auto
+
+ports:
+  2000/tcp: 2000
+
 options: {}
 schema: {}
-
