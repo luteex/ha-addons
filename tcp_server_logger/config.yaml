@@ -1,16 +1,13 @@
 name: "TCP Server Logger"
 version: "1.0.0"
 slug: "tcp_server_logger"
-description: "Jednoduchý TCP server na portu 2000, loguje přijatá data."
+description: "Jednoduchý TCP server na portu 2000."
 arch:
   - amd64
   - armv7
   - aarch64
 startup: services
 boot: auto
-host_network: true
-ports:
-  2000/tcp: 2000
 options: {}
 schema: {}
-image: "local/tcp_server_logger:latest"
+
