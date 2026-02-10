@@ -16,4 +16,3 @@ RUN chmod a+x /run.sh
 
 # Spouštěcí příkaz
 CMD [ "/run.sh" ]
-
