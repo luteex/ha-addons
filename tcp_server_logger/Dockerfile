@@ -1,11 +1,9 @@
-ARG BUILD_FROM
-FROM ${BUILD_FROM}
+FROM alpine:3.19
 
 RUN apk add --no-cache python3
 
-WORKDIR /usr/src/app
-COPY tcp_server.py /usr/src/app/
+WORKDIR /app
 
-COPY rootfs/ /
+COPY tcp_server.py /app/
 
-RUN chmod +x /etc/services.d/tcp_server/run
+CMD ["python3", "-u", "/app/tcp_server.py"]
