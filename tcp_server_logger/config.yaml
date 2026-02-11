@@ -1,11 +1,12 @@
 name: "TCP Server Logger"
-version: "1.0.8"
+version: "2.0.1"
 slug: "tcp_server_logger"
-description: "Jednoduchý TCP server na portu 2000."
+description: "Jednoduchý TCP server na portu 2000"
 arch:
   - amd64
   - armv7
   - aarch64
+
 startup: application
 boot: auto
 
@@ -14,3 +15,4 @@ ports:
 
 options: {}
 schema: {}
+
